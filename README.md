@@ -1,50 +1,55 @@
-# Vietnamese Hate Speech Detection
+# Vietnamese Hate Speech Detection (PhoBERT + SVM)
 
-A machine learning project for detecting **Vietnamese hate speech** using both traditional Machine Learning and Transformer-based models.
+A Natural Language Processing project for **Vietnamese Hate Speech Detection** using both:
 
-This project demonstrates two approaches:
+* **PhoBERT (Transformer-based model)**
+* **SVM (Machine Learning baseline)**
 
-* **SVM + TF-IDF** (traditional ML baseline)
-* **PhoBERT** (Transformer-based deep learning model)
-
-The system also includes a **Streamlit web demo** to interactively test predictions.
+The system provides an interactive **Streamlit web interface** for comparing predictions between models.
 
 ---
 
-# Models Used
+# Project Overview
 
-### 1. SVM + TF-IDF
+This project detects **hate speech in Vietnamese social media comments** using two approaches:
 
-A classical machine learning pipeline using:
+| Model   | Type             | Description                              |
+| ------- | ---------------- | ---------------------------------------- |
+| PhoBERT | Deep Learning    | Vietnamese pre-trained transformer model |
+| SVM     | Machine Learning | TF-IDF + Support Vector Machine          |
 
-* TF-IDF text vectorization
-* Support Vector Machine classifier
+The application allows users to:
 
-Advantages:
-
-* Fast training
-* Lightweight model
-* Good baseline performance
-
----
-
-### 2. PhoBERT
-
-The transformer model **PhoBERT** developed by VinAI Research.
-
-PhoBERT is based on the architecture of RoBERTa and is pre-trained specifically for Vietnamese NLP tasks.
-
-Advantages:
-
-* Better contextual understanding
-* Higher accuracy on complex language patterns
-* State-of-the-art Vietnamese language representation
+* Enter a Vietnamese sentence
+* Predict hate speech category
+* Compare predictions from both models
+* View probability scores
 
 ---
 
 # Dataset
 
-The project uses the **Vietnamese Hate Speech Dataset (VN-HSD)**.
+Dataset used:
+
+**VN-HSD: Vietnamese Hate Speech Detection**
+
+Source:
+https://huggingface.co/datasets/visolex/VN-HSD
+
+Dataset size:
+
+```
+40532 comments
+```
+
+Columns:
+
+```
+dataset
+type
+comment
+label
+```
 
 Labels:
 
@@ -54,13 +59,6 @@ Labels:
 | 1     | OFFENSIVE |
 | 2     | HATE      |
 
-Example:
-
-| Text                             | Label |
-| -------------------------------- | ----- |
-| Em được làm fan cứng luôn rồi nè | CLEAN |
-| Đúng là bọn mắt híp              | HATE  |
-
 ---
 
 # Project Structure
@@ -68,45 +66,43 @@ Example:
 ```
 sentiment_project
 │
+├── app_streamlit.py
+├── README.md
+├── requirements.txt
+├── .gitignore
+│
+├── data
+│   └── vn_hsd_dataset.csv
+│
 ├── models
 │   ├── svm_model.pkl
-│   ├── tfidf_vectorizer.pkl
 │   └── phobert_model
+│       ├── config.json
+│       ├── model.safetensors
+│       ├── vocab.txt
+│       └── tokenizer_config.json
 │
 ├── scripts
-│   ├── train_svm.py
 │   ├── train_phobert.py
-│   └── test_predict.py
+│   ├── train_svm.py
+│   └── download_dataset.py
 │
-├── utils
-│   └── data_loader.py
-│
-├── app_streamlit.py
-├── requirements.txt
-└── README.md
+└── utils
+    └── data_loader.py
 ```
 
 ---
 
 # Installation
 
-Clone the repository from GitHub
+Clone repository
 
 ```
-git clone https://github.com/yourname/sentiment_project.git
-cd sentiment_project
+git clone https://github.com/VietKhoaNguyen/NLP_MID.git
+cd NLP_MID
 ```
 
-Create a Python environment (recommended)
-
-Using Conda:
-
-```
-conda create -n sentiment python=3.10
-conda activate sentiment
-```
-
-Install dependencies:
+Install dependencies
 
 ```
 pip install -r requirements.txt
@@ -114,117 +110,129 @@ pip install -r requirements.txt
 
 ---
 
-# Training the Models
+# Download Dataset
 
-### Train SVM Model
-
-```
-python scripts/train_svm.py
-```
-
-This will generate:
+Run:
 
 ```
-models/svm_model.pkl
-models/tfidf_vectorizer.pkl
+python scripts/download_dataset.py
+```
+
+This will download the VN-HSD dataset and save it to:
+
+```
+data/vn_hsd_dataset.csv
 ```
 
 ---
 
-### Train PhoBERT Model
+# Train Models
+
+## Train PhoBERT
 
 ```
 python scripts/train_phobert.py
 ```
 
-The script will automatically download the PhoBERT weights from Hugging Face.
-
-After training finishes, the model will be saved in:
+Output model will be saved to:
 
 ```
-models/phobert_model
+models/phobert_model/
 ```
 
 ---
 
-# Running the Web Demo
+## Train SVM
 
-The project includes an interactive web interface built with Streamlit.
+```
+python scripts/train_svm.py
+```
 
-Run:
+Output:
+
+```
+models/svm_model.pkl
+```
+
+---
+
+# Run the Web Application
+
+Launch the Streamlit interface:
 
 ```
 streamlit run app_streamlit.py
 ```
 
-Then open your browser at:
+Open in browser:
 
 ```
 http://localhost:8501
 ```
 
-You can:
+You can now input Vietnamese text and compare predictions from:
 
-* Enter Vietnamese text
-* Select a model (SVM or PhoBERT)
-* See the predicted label
-
----
-
-# Example Usage
-
-Input text:
-
-```
-Đúng là bọn mắt híp
-```
-
-Prediction:
-
-```
-HATE
-```
+* PhoBERT
+* SVM
 
 ---
 
-# Requirements
+# Example Prediction
 
-Main libraries used:
+Input:
+
+```
+Đúng là bọn ngu dốt
+```
+
+Output:
+
+```
+PhoBERT Prediction: HATE
+SVM Prediction: OFFENSIVE
+```
+
+---
+
+# Model Comparison
+
+| Model   | Advantages                                | Limitations               |
+| ------- | ----------------------------------------- | ------------------------- |
+| PhoBERT | Higher accuracy, contextual understanding | Requires GPU for training |
+| SVM     | Fast training, simple                     | Lower performance         |
+
+PhoBERT generally performs better on complex Vietnamese linguistic patterns.
+
+---
+
+# Technologies Used
 
 * Python
 * PyTorch
-* Transformers
+* HuggingFace Transformers
 * Scikit-learn
 * Streamlit
 * Pandas
-* HuggingFace Datasets
-
-Install them using:
-
-```
-pip install -r requirements.txt
-```
 
 ---
 
 # Notes
 
-If you see the warning:
+PhoBERT model files can be large (>500MB).
+If the model is not included in the repository, download or train it locally using:
 
 ```
-pin_memory argument is set as true but no accelerator is found
+python scripts/train_phobert.py
 ```
-
-This simply means the program is running on **CPU instead of GPU** and does **not affect training or inference**.
 
 ---
 
-# Authors
+# Author
 
-Your Name
+Nguyen Viet Khoa
 
 ---
 
 # License
 
-This project is for **educational and research purposes**.
+This project is for educational and research purposes.
