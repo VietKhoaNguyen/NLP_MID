@@ -1,8 +1,6 @@
 from datasets import load_dataset
 
-
 def load_dataset_vn_hsd():
-
     # Load dataset
     dataset = load_dataset("visolex/VN-HSD")
     full_ds = dataset["train"]
@@ -19,5 +17,4 @@ def load_dataset_vn_hsd():
 
     # Convert to pandas
     df = full_ds.to_pandas()
-
     return df
