@@ -1,57 +1,41 @@
 # Vietnamese Hate Speech Detection (PhoBERT + SVM)
 
-A Natural Language Processing project for **Vietnamese Hate Speech Detection** using both:
+This project implements a **Vietnamese Hate Speech Detection system** using two approaches:
 
-* **PhoBERT (Transformer-based model)**
-* **SVM (Machine Learning baseline)**
+* **PhoBERT** (Transformer-based deep learning model)
+* **SVM** (Machine learning baseline using TF-IDF)
 
-The system provides an interactive **Streamlit web interface** for comparing predictions between models.
+The system includes a **Streamlit web application** that allows users to input Vietnamese text and compare predictions from both models.
 
 ---
 
-# Project Overview
+# Project Features
 
-This project detects **hate speech in Vietnamese social media comments** using two approaches:
-
-| Model   | Type             | Description                              |
-| ------- | ---------------- | ---------------------------------------- |
-| PhoBERT | Deep Learning    | Vietnamese pre-trained transformer model |
-| SVM     | Machine Learning | TF-IDF + Support Vector Machine          |
-
-The application allows users to:
-
-* Enter a Vietnamese sentence
-* Predict hate speech category
-* Compare predictions from both models
-* View probability scores
+* Hate speech classification for Vietnamese text
+* Comparison between **PhoBERT** and **SVM**
+* Probability scores for predictions
+* Interactive web interface using Streamlit
 
 ---
 
 # Dataset
 
-Dataset used:
+This project uses the **VN-HSD (Vietnamese Hate Speech Detection)** dataset from Hugging Face.
 
-**VN-HSD: Vietnamese Hate Speech Detection**
-
-Source:
+Dataset link:
 https://huggingface.co/datasets/visolex/VN-HSD
 
-Dataset size:
+Dataset statistics:
 
-```
-40532 comments
-```
+* Total samples: **40,532 comments**
+* Columns:
 
-Columns:
+  * `dataset`
+  * `type`
+  * `comment`
+  * `label`
 
-```
-dataset
-type
-comment
-label
-```
-
-Labels:
+Label meanings:
 
 | Label | Meaning   |
 | ----- | --------- |
@@ -83,26 +67,25 @@ sentiment_project
 │       └── tokenizer_config.json
 │
 ├── scripts
+│   ├── download_dataset.py
 │   ├── train_phobert.py
-│   ├── train_svm.py
-│   └── download_dataset.py
+│   └── train_svm.py
 │
 └── utils
-    └── data_loader.py
 ```
 
 ---
 
 # Installation
 
-Clone repository
+Clone the repository:
 
 ```
 git clone https://github.com/VietKhoaNguyen/NLP_MID.git
 cd NLP_MID
 ```
 
-Install dependencies
+Install dependencies:
 
 ```
 pip install -r requirements.txt
@@ -110,15 +93,33 @@ pip install -r requirements.txt
 
 ---
 
+# Quick Start (Recommended)
+
+Run the following commands:
+
+```
+python scripts/download_dataset.py
+python scripts/train_svm.py
+streamlit run app_streamlit.py
+```
+
+Open the web interface:
+
+```
+http://localhost:8501
+```
+
+---
+
 # Download Dataset
 
-Run:
+To download the VN-HSD dataset automatically:
 
 ```
 python scripts/download_dataset.py
 ```
 
-This will download the VN-HSD dataset and save it to:
+The dataset will be saved to:
 
 ```
 data/vn_hsd_dataset.csv
@@ -128,27 +129,13 @@ data/vn_hsd_dataset.csv
 
 # Train Models
 
-## Train PhoBERT
-
-```
-python scripts/train_phobert.py
-```
-
-Output model will be saved to:
-
-```
-models/phobert_model/
-```
-
----
-
-## Train SVM
+## Train SVM Model
 
 ```
 python scripts/train_svm.py
 ```
 
-Output:
+The trained model will be saved to:
 
 ```
 models/svm_model.pkl
@@ -156,28 +143,41 @@ models/svm_model.pkl
 
 ---
 
+## Train PhoBERT Model
+
+```
+python scripts/train_phobert.py
+```
+
+The trained model will be saved to:
+
+```
+models/phobert_model/
+```
+
+Note: PhoBERT training may require GPU and can take significant time.
+
+---
+
 # Run the Web Application
 
-Launch the Streamlit interface:
+Start the Streamlit application:
 
 ```
 streamlit run app_streamlit.py
 ```
 
-Open in browser:
+Then open:
 
 ```
 http://localhost:8501
 ```
 
-You can now input Vietnamese text and compare predictions from:
-
-* PhoBERT
-* SVM
+You can enter Vietnamese text and see predictions from both **PhoBERT** and **SVM**.
 
 ---
 
-# Example Prediction
+# Example
 
 Input:
 
@@ -194,36 +194,14 @@ SVM Prediction: OFFENSIVE
 
 ---
 
-# Model Comparison
-
-| Model   | Advantages                                | Limitations               |
-| ------- | ----------------------------------------- | ------------------------- |
-| PhoBERT | Higher accuracy, contextual understanding | Requires GPU for training |
-| SVM     | Fast training, simple                     | Lower performance         |
-
-PhoBERT generally performs better on complex Vietnamese linguistic patterns.
-
----
-
 # Technologies Used
 
 * Python
 * PyTorch
-* HuggingFace Transformers
+* Transformers
 * Scikit-learn
 * Streamlit
 * Pandas
-
----
-
-# Notes
-
-PhoBERT model files can be large (>500MB).
-If the model is not included in the repository, download or train it locally using:
-
-```
-python scripts/train_phobert.py
-```
 
 ---
 
@@ -235,4 +213,4 @@ Nguyen Viet Khoa
 
 # License
 
-This project is for educational and research purposes.
+This project is developed for educational and research purposes.
