@@ -1,59 +1,78 @@
-import os
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
+import pandas as pd
 import joblib
+from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.svm import LinearSVC
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import classification_report
 
-from utils.data_loader import load_dataset_vn_hsd
+# =========================
+# Paths
+# =========================
+root = Path(__file__).resolve().parent.parent
+data_path = root / "data" / "vn_hsd_dataset.csv"
+model_dir = root / "models"
 
+model_dir.mkdir(exist_ok=True)
 
-def train_svm():
+# =========================
+# Load dataset
+# =========================
+df = pd.read_csv(data_path)
 
-    print("Loading dataset...")
-    df = load_dataset_vn_hsd()
+df["text"] = df["comment"]
+df = df[["text", "label"]]
 
-    print("Splitting dataset...")
-    train_df, test_df = train_test_split(
-        df,
-        test_size=0.2,
-        stratify=df["label"],
-        random_state=42
-    )
+# FIX NaN
+df = df.dropna(subset=["text"])
+df["text"] = df["text"].astype(str)
 
-    y_train = train_df["label"]
-    y_test = test_df["label"]
+print("Dataset size:", len(df))
+print(df.head())
 
-    print("Building TF-IDF...")
-    tfidf = TfidfVectorizer(
-        max_features=20000,
+# =========================
+# Train test split
+# =========================
+X_train, X_test, y_train, y_test = train_test_split(
+    df["text"],
+    df["label"],
+    test_size=0.1,
+    random_state=42
+)
+
+# =========================
+# Pipeline
+# =========================
+pipeline = Pipeline([
+    ("tfidf", TfidfVectorizer(
+        max_features=30000,
         ngram_range=(1,2)
-    )
+    )),
+    ("svm", SVC(
+        kernel="linear",
+        probability=True
+    ))
+])
 
-    X_train = tfidf.fit_transform(train_df["comment"])
-    X_test = tfidf.transform(test_df["comment"])
+print("Training SVM...")
 
-    print("Training SVM model...")
-    svm = LinearSVC()
-    svm.fit(X_train, y_train)
+pipeline.fit(X_train, y_train)
 
-    preds = svm.predict(X_test)
+# =========================
+# Evaluation
+# =========================
+preds = pipeline.predict(X_test)
 
-    print("\n=== SVM RESULTS ===")
-    print("Accuracy:", accuracy_score(y_test, preds))
-    print(classification_report(y_test, preds))
+print("\nClassification Report:\n")
+print(classification_report(y_test, preds))
 
-    os.makedirs("models", exist_ok=True)
+# =========================
+# Save model
+# =========================
+model_path = model_dir / "svm_model.pkl"
 
-    joblib.dump(svm, "models/svm_model.pkl")
-    joblib.dump(tfidf, "models/tfidf_vectorizer.pkl")
+joblib.dump(pipeline, model_path)
 
-    print("\nModels saved to /models")
-
-
-if __name__ == "__main__":
-    train_svm()
+print("\nModel saved to:", model_path)

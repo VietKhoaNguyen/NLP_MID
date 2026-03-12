@@ -8,3 +8,7 @@ seaborn
 matplotlib
 streamlit
 joblib
+transformers
+datasets
+accelerate
+torch

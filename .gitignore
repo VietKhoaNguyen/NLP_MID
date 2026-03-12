@@ -12,3 +12,9 @@ models/
 # OS
 .DS_Store
 Thumbs.db
+
+models/phobert_model/model.safetensors
+__pycache__/
+*.pyc
+.env
+.venv
