@@ -207,7 +207,7 @@ SVM Prediction: OFFENSIVE
 
 # Author
 
-USTH-Group 1 for Lec. Natural Language Processing:
+USTH-Group 1 for Lec. Natural Language Processing:<br>
 Nguyễn Việt Khoa - 23BI14223<br>
 Nguyễn Phạm Trường An - 23BI14004<br>
 Phạm Tưởng Ngạn - 23BI14334<br>
