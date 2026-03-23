@@ -213,7 +213,7 @@ USTH-Group 1 for Lec. Natural Language Processing:
 - Phạm Tường Ngạn - 23BI14334
 - Nguyễn Công Phúc - 23BI14359
 - Đỗ Minh Tiến - 23BI14421
-- Phùng Đàm Tiến Sĩ - 23BI14384
+- Phùng Đàm Tiến Sĩ - 23BI14383
 
 ---
 
