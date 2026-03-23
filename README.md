@@ -53,7 +53,9 @@ sentiment_project
 ├── app_streamlit.py
 ├── README.md
 ├── requirements.txt
-├── train_phobert_colab.ipynb
+├── Nlp.ipynb
+├── NLP Report.pdf (Report for this project)
+├── NLP Slides.pdf (Slides for this project)
 ├── .gitignore
 │
 ├── data
